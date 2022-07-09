@@ -1,5 +1,7 @@
 package com.example.joinforfunlifehack;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -32,6 +34,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
@@ -45,6 +54,11 @@ public class MainActivity extends AppCompatActivity {
     private View header;
     private TextView headerName;
     private TextView headerEmail;
+    private ArrayList<Item> list;
+    private String expirationDate;
+    private String name;
+
+    private int noficationID = 1;
 
 
     @Override
@@ -83,7 +97,15 @@ public class MainActivity extends AppCompatActivity {
         header = navigationView.getHeaderView(0);
         headerName = (TextView) header.findViewById(R.id.userName);
         headerEmail = (TextView) header.findViewById(R.id.userEmail);
+        getUser();
 
+        //reminder
+        list = new ArrayList<>();
+        getCalender();
+
+    }
+
+    private void getUser() {
         databaseReference = FirebaseDatabase.getInstance().getReference("Users");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -102,7 +124,68 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Fail to get data.", Toast.LENGTH_LONG).show();
             }
         });
+    }
 
+    private void getCalender() {
+        Date date = null;
+
+        //get current date
+        Calendar calender = Calendar.getInstance();
+
+
+        //get firebase data
+        databaseReference = FirebaseDatabase.getInstance().getReference("Items/" + currentuser);
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (dataSnapshot.hasChildren()) {
+                        Item item = dataSnapshot.getValue(Item.class);
+                        list.add(item);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(MainActivity.this, "Fail to get data.", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        //get reminder
+        if (list != null) {
+            for (Item item: list) {
+                expirationDate = item.getExpirationDate();
+                name = item.getItemName();;
+                try {
+                    date = new SimpleDateFormat("dd/MM/yyyy").parse(expirationDate);
+                } catch (ParseException e) {
+                    date = null;
+                    e.printStackTrace();
+                }
+            }
+        }
+
+
+        //initialise alarm
+        Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
+        intent.putExtra("notificationID", noficationID);
+        intent.putExtra("todo", name + "left 1 day to expired");
+        PendingIntent alarmIntent = PendingIntent.getBroadcast(MainActivity.this, 0,
+                intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        if (date != null) {
+            calender.setTime(date);
+            calender.set(Calendar.HOUR, 0);
+            calender.set(Calendar.MINUTE, 0);
+            calender.set(Calendar.SECOND, 0);
+            calender.set(Calendar.AM_PM, Calendar.PM);
+            long alarmStartTime = calender.getTimeInMillis();
+
+            //setAlarm
+            alarmManager.set(AlarmManager.RTC_WAKEUP, alarmStartTime,alarmIntent);
+        }
     }
 
     @Override
