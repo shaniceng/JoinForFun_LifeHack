@@ -5,11 +5,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Menu;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.joinforfunlifehack.ui.gallery.GalleryFragment;
+import com.example.joinforfunlifehack.ui.gallery.Item;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
@@ -21,6 +25,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.joinforfunlifehack.databinding.ActivityMainBinding;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,10 +37,23 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     private Button logout;
 
+    private FirebaseAuth auth;
+    private DatabaseReference databaseReference;
+    private String currentuser;
+
+    //private NavigationView navigationView;
+    private View header;
+    private TextView headerName;
+    private TextView headerEmail;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //get firebase auth
+        auth= FirebaseAuth.getInstance();
+        currentuser = auth.getCurrentUser().getUid();
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -46,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
         });
         DrawerLayout drawer = binding.drawerLayout;
         NavigationView navigationView = binding.navView;
+
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
@@ -56,6 +80,29 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+        header = navigationView.getHeaderView(0);
+        headerName = (TextView) header.findViewById(R.id.userName);
+        headerEmail = (TextView) header.findViewById(R.id.userEmail);
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    if (dataSnapshot.hasChildren() && dataSnapshot.getKey().equals(currentuser)) {
+                        User user = dataSnapshot.getValue(User.class);
+                        headerName.setText(user.getFullname());
+                        headerEmail.setText(user.getEmail());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(MainActivity.this, "Fail to get data.", Toast.LENGTH_LONG).show();
+            }
+        });
+
         logout = (Button) findViewById(R.id.logoutBtn);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +111,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, LoginPage.class));
             }
         });
+
+
+
     }
 
     @Override
