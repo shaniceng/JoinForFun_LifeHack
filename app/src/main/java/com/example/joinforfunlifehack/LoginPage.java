@@ -80,6 +80,11 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
             editTextEmail.requestFocus();
             return;
         }
+        if (password.isEmpty()) {
+            editTextPassword.setError("Password is required!");
+            editTextPassword.requestFocus();
+            return;
+        }
         if (password.length() < 6) {
             editTextPassword.setError("min password length is 6 characters!");
             editTextPassword.requestFocus();

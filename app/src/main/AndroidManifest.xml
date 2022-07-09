@@ -32,7 +32,7 @@
             android:name=".MainActivity"
             android:exported="false"
             android:label="@string/app_name"
-            android:theme="@style/Theme.JoinForFunLifeHack.NoActionBar"></activity>
+            android:theme="@style/Theme.JoinForFunLifeHack.NoActionBar"/>
     </application>
 
 </manifest>
