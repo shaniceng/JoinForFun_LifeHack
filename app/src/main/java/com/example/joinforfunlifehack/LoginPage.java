@@ -9,6 +9,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +25,7 @@ public class LoginPage extends AppCompatActivity implements View.OnClickListener
     private TextView register, forgotPassword;
     private EditText editTextEmail, editTextPassword;
     private Button login;
+
 
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;

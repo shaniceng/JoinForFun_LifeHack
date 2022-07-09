@@ -9,6 +9,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
     private TextView banner;
     private EditText emailEditText;
     private Button resetPasswordBtn;
+    private ImageButton backBtn;
     private ProgressBar progressBar;
 
     FirebaseAuth auth;
@@ -37,6 +39,9 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
         resetPasswordBtn = (Button) findViewById(R.id.forgotPasswordBtn);
         resetPasswordBtn.setOnClickListener(this);
 
+        backBtn = (ImageButton) findViewById(R.id.backBtn);
+        backBtn.setOnClickListener(this);
+
         progressBar = (ProgressBar) findViewById(R.id.progressBar3);
         
         auth = FirebaseAuth.getInstance();
@@ -46,6 +51,7 @@ public class ForgotPassword extends AppCompatActivity implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.banner2:
+            case R.id.backBtn:
                 startActivity(new Intent(this, LoginPage.class));
                 break;
             case R.id.forgotPasswordBtn:
