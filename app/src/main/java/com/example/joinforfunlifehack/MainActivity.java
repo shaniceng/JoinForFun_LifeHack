@@ -34,6 +34,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Console;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
-    private Button logout;
 
     private FirebaseAuth auth;
     private DatabaseReference databaseReference;
@@ -102,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
         //reminder
         list = new ArrayList<>();
         getCalender();
+        GetAlarm();
 
     }
 
@@ -127,12 +128,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getCalender() {
-        Date date = null;
-
-        //get current date
-        Calendar calender = Calendar.getInstance();
-
-
         //get firebase data
         databaseReference = FirebaseDatabase.getInstance().getReference("Items/" + currentuser);
         databaseReference.addValueEventListener(new ValueEventListener() {
@@ -152,17 +147,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    private void GetAlarm() {
+        Date date = null;
+
+        //get current date
+        Calendar calender = Calendar.getInstance();
+
         //get reminder
-        if (list != null) {
-            for (Item item: list) {
-                expirationDate = item.getExpirationDate();
-                name = item.getItemName();;
-                try {
-                    date = new SimpleDateFormat("dd/MM/yyyy").parse(expirationDate);
-                } catch (ParseException e) {
-                    date = null;
-                    e.printStackTrace();
-                }
+        for (Item item: list) {
+            expirationDate = item.getExpirationDate();
+            name = item.getItemName();;
+            try {
+                date = new SimpleDateFormat("dd/MM/yyyy").parse(expirationDate);
+            } catch (ParseException e) {
+                date = null;
+                e.printStackTrace();
             }
         }
 
@@ -170,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
         //initialise alarm
         Intent intent = new Intent(MainActivity.this, AlarmReceiver.class);
         intent.putExtra("notificationID", noficationID);
-        intent.putExtra("todo", name + "left 1 day to expired");
+        intent.putExtra("todo", name + "is expiring today");
         PendingIntent alarmIntent = PendingIntent.getBroadcast(MainActivity.this, 0,
                 intent, PendingIntent.FLAG_CANCEL_CURRENT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -186,6 +188,8 @@ public class MainActivity extends AppCompatActivity {
             //setAlarm
             alarmManager.set(AlarmManager.RTC_WAKEUP, alarmStartTime,alarmIntent);
         }
+
+
     }
 
     @Override
