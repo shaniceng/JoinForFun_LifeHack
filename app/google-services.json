@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "912701834871",
+    "project_id": "joinforfunlifehack",
+    "storage_bucket": "joinforfunlifehack.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:912701834871:android:8df9cc802bdcc49c1fe872",
+        "android_client_info": {
+          "package_name": "com.example.joinforfunlifehack"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "912701834871-gb6oic0r42n4v8hloavvb09vqgfb0665.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAACPXPs0_ppOXi0p9M-xtpvD4gqvWb3xI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "912701834871-gb6oic0r42n4v8hloavvb09vqgfb0665.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
