@@ -25,7 +25,10 @@
     <Button
         android:id="@+id/scanbtn"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:text="Open Camera"
+        android:textColor="@color/white"
+        android:textSize="40sp"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
