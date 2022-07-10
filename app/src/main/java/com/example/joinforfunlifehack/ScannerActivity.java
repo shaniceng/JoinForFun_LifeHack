@@ -69,7 +69,7 @@ public class ScannerActivity extends AppCompatActivity {
             public void onClick(View v){
                 String[]itemInput = qrCode.split(",");
                 Item item = new Item(itemInput[0],itemInput[1]);
-                databaseReference.addValueEventListener(new ValueEventListener() {
+                databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         databaseReference.push().setValue(item);
