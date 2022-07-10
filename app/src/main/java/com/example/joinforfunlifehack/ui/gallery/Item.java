@@ -1,5 +1,7 @@
 package com.example.joinforfunlifehack.ui.gallery;
 
+import java.sql.Date;
+
 public class Item {
     String itemName, expirationDate;
 
@@ -7,7 +9,7 @@ public class Item {
 
     }
 
-    public Item(String itemName, String expirationDate) {
+    public Item(String expirationDate, String itemName) {
         this.itemName = itemName;
         this.expirationDate = expirationDate;
     }

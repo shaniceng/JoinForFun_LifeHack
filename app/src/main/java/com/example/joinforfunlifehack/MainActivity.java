@@ -58,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
     private String expirationDate;
     private String name;
 
+    private Button scanbtn;
+
     private int noficationID = 1;
 
 
@@ -144,6 +146,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(MainActivity.this, "Fail to get data.", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        scanbtn = (Button) findViewById(R.id.scanbtn);
+        scanbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, ScannerActivity.class);
+                startActivity(intent);
             }
         });
 
