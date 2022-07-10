@@ -9,6 +9,8 @@ This application is able to achieve the mission by providing the following featu
 - QRCode Scanner + recording products bought and expiry date
 - In-app recipes
 - Remind users of the products' expiry date they have purchased
+- Provide donation drive locations 
+
 
 
 
